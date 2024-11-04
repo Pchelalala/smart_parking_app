@@ -1,6 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if(kIsWeb) {
+    await Firebase.initializeApp(options: const FirebaseOptions(
+        apiKey: "AIzaSyDKi-4E_4_TRHFrhmPIbk431sQGOIv2LAQ",
+        appId: "1:737151851108:web:4724c8fd9dbb2316fedd71",
+        messagingSenderId: "737151851108",
+        projectId: "smart-parking-app-b7155"));
+  }
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
