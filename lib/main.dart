@@ -9,30 +9,34 @@ import 'features/user_auth/presentation/pages/sign_up_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if(kIsWeb) {
-    await Firebase.initializeApp(options: const FirebaseOptions(
-        apiKey: "AIzaSyDKi-4E_4_TRHFrhmPIbk431sQGOIv2LAQ",
-        appId: "1:737151851108:web:4724c8fd9dbb2316fedd71",
-        messagingSenderId: "737151851108",
-        projectId: "smart-parking-app-b7155"));
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: "AIzaSyDKi-4E_4_TRHFrhmPIbk431sQGOIv2LAQ",
+            appId: "1:737151851108:web:4724c8fd9dbb2316fedd71",
+            messagingSenderId: "737151851108",
+            projectId: "smart-parking-app-b7155"));
   } else {
     await Firebase.initializeApp();
   }
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  //const MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Smart Parking App',
+      home: const SplashScreen(
+        child: LoginPage(),
+      ),
       routes: {
-        '/': (context) => const SplashScreen(
-          // Here decide whether to show the LoginPage or HomePage based on user authentication
-          child: LoginPage(),
-        ),
+        // '/': (context) => const SplashScreen(
+        //   // Here decide whether to show the LoginPage or HomePage based on user authentication
+        //   child: LoginPage(),
+        // ),
         '/login': (context) => const LoginPage(),
         '/signUp': (context) => const SignUpPage(),
         '/home': (context) => const HomePage(),

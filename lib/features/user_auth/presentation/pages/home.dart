@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text("HomePage"),
+          title: const Text("HomePage"),
         ),
         body: Center(
           child: Column(
@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(10)),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "Create Data",
                       style: TextStyle(
@@ -51,17 +51,17 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               StreamBuilder<List<UserModel>>(
                   stream: _readData(),
                   builder: (context, snapshot) {
                     if(snapshot.connectionState == ConnectionState.waiting){
-                      return Center(child: CircularProgressIndicator(),);
+                      return const Center(child: CircularProgressIndicator(),);
                     } if(snapshot.data!.isEmpty){
-                      return Center(child:Text("No Data Yet"));
+                      return const Center(child:Text("No Data Yet"));
                     }
                     final users = snapshot.data;
-                    return Padding(padding: EdgeInsets.all(8),
+                    return Padding(padding: const EdgeInsets.all(8),
                       child: Column(
                           children: users!.map((user) {
                             return ListTile(
@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                                 onTap: (){
                                   _deleteData(user.id!);
                                 },
-                                child: Icon(Icons.delete),
+                                child: const Icon(Icons.delete),
                               ),
                               trailing: GestureDetector(
                                 onTap: (){
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(10)),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "Sign out",
                       style: TextStyle(
