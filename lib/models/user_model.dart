@@ -10,8 +10,7 @@ class UserModel {
       {this.firstName, this.lastName, this.carPlates, this.profileImageUrl});
 
   // Convert Firestore document data to UserModel
-  static UserModel fromSnapshot(
-      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  static UserModel fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     return UserModel(
       firstName: snapshot['firstName'],
       lastName: snapshot['lastName'],
