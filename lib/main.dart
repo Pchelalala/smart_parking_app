@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_parking_app/screens/parkings_screen.dart';
 
 import 'features/app/splash_screen/splash_screen.dart';
 import 'features/user_auth/presentation/pages/home.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/signUp': (context) => const SignUpPage(),
         '/home': (context) => const HomePage(),
+        '/parkings': (context) => const ParkingsScreen()
       },
     );
   }

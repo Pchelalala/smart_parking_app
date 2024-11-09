@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../../global/common/toast.dart';
 import '../../../../models/user_model.dart';
 import '../../../../screens/edit_profile_screen.dart';
+import '../../../../screens/parkings_screen.dart';
 import '../../../../screens/profile_setup_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   UserModel? _user;
   bool _isLoading = true;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -65,84 +67,85 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile'),
-          backgroundColor: Colors.blue,
-        ),
-        body: _user == null
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 40.0, horizontal: 16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage(_user!.profileImageUrl ??
-                            'https://via.placeholder.com/150'),
-                        backgroundColor: Colors.blue.shade100,
+      appBar: AppBar(
+        title: const Text('Profile'),
+        backgroundColor: Colors.blue,
+      ),
+      body: _user == null
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 40.0, horizontal: 16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(_user!.profileImageUrl ??
+                          'https://via.placeholder.com/150'),
+                      backgroundColor: Colors.blue.shade100,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      '${_user!.firstName} ${_user!.lastName}',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
                       ),
-                      const SizedBox(height: 20),
-                      Text(
-                        '${_user!.firstName} ${_user!.lastName}',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
+                    ),
+                    Text(
+                      'Car Plates: ${_user!.carPlates}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
                       ),
-                      Text(
-                        'Car Plates: ${_user!.carPlates}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.blue,
-                        ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: _editProfile,
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
                       ),
-                      const SizedBox(height: 20),
-                      TextButton(
-                        onPressed: _editProfile,
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                        ),
-                        child: const Text(
-                          'Edit Profile',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                      child: const Text(
+                        'Edit Profile',
+                        style: TextStyle(color: Colors.white),
                       ),
-                      const SizedBox(height: 10),
-                      TextButton(
-                        onPressed: () {
-                          // Your code for viewing parking history
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                        ),
-                        child: const Text(
-                          'View Parking History',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        // Your code for viewing parking history
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
                       ),
-                      const SizedBox(height: 10),
-                      TextButton(
-                        onPressed: () {
-                          FirebaseAuth.instance.signOut();
-                          Navigator.pushNamed(context, "/login");
-                          showToast(message: "Successfully signed out");
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.red,
-                        ),
-                        child: const Text(
-                          'Sign Out',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                      child: const Text(
+                        'View Parking History',
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        FirebaseAuth.instance.signOut();
+                        Navigator.pushNamed(context, "/login");
+                        showToast(message: "Successfully signed out");
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                      child: const Text(
+                        'Sign Out',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
-              )));
+              ),
+            )),
+    );
   }
 }
