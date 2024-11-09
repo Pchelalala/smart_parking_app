@@ -3,14 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ParkingSlotModel {
   final bool isBooked;
   final String slotName;
-  final String slotId;
-  final String time;
 
   ParkingSlotModel({
     required this.isBooked,
     required this.slotName,
-    this.slotId = "0.0",
-    required this.time,
   });
 
   // Convert Firestore document data to ParkingSlotModel
@@ -19,8 +15,6 @@ class ParkingSlotModel {
     return ParkingSlotModel(
       isBooked: snapshot['isBooked'] as bool,
       slotName: snapshot['slotName'] as String,
-      slotId: snapshot['slotId'] as String? ?? "0.0",
-      time: snapshot['time'] as String? ?? "",
     );
   }
 
@@ -29,8 +23,6 @@ class ParkingSlotModel {
     return {
       'isBooked': isBooked,
       'slotName': slotName,
-      'slotId': slotId,
-      'time': time,
     };
   }
 }

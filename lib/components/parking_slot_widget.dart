@@ -22,36 +22,35 @@ class ParkingSlotWidget extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         width: 180,
-        height: 120,
+        height: 140,
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                parkingSlot.time == "0.0"
-                    ? SizedBox(width: 1)
-                    : Container(child: Text(parkingSlot.time)),
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 15),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 1, horizontal: 15),
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue.shade100),
-                      borderRadius: BorderRadius.circular(20)),
+                    border: Border.all(color: Colors.blue.shade100),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: Text(
-                    parkingSlot.slotName ?? "",
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                    parkingSlot.slotName,
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w500),
                   ),
                 ),
-                const Text(""),
               ],
             ),
-            const SizedBox(height: 10),
-            if (parkingSlot.isBooked == true)
-              Expanded(child: Image.asset("assets/images/car.png"))
-            else if (parkingSlot.isBooked == true)
+            const SizedBox(height: 1),
+            if (parkingSlot.isBooked)
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Image.asset("assets/images/car.png"),
+                    const SizedBox(height: 1),
                     Text(
                       "BOOKED",
                       style: TextStyle(
@@ -70,13 +69,13 @@ class ParkingSlotWidget extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => BookingPage(
-                          slotId: parkingSlot.slotId,
-                          slotName: parkingSlot.slotName ?? "",
+                          slotName: parkingSlot.slotName,
                         ),
                       ));
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 30),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 7, horizontal: 30),
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(10),

@@ -3,8 +3,7 @@ import 'package:lottie/lottie.dart';
 
 class BookingPage extends StatefulWidget {
   final String slotName;
-  final String slotId;
-  const BookingPage({super.key, required this.slotId, required this.slotName});
+  const BookingPage({super.key, required this.slotName});
 
   @override
   State<BookingPage> createState() => _BookingPageState();
@@ -199,7 +198,7 @@ class _BookingPageState extends State<BookingPage> {
                     ),
                     InkWell(
                       onTap: () {
-                        updateData(widget.slotId);
+                        updateData(widget.slotName);
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
