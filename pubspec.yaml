@@ -39,6 +39,7 @@ dependencies:
   fluttertoast: ^8.2.8
   font_awesome_flutter: ^10.8.0
   another_dashed_container: ^1.0.0
+  flutter_stripe: ^11.2.0
 
 
   # The following adds the Cupertino Icons font to your application.
