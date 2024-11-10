@@ -30,7 +30,7 @@ class _BookingPageState extends State<BookingPage> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
-          "BOOK SLOT",
+          "Booking",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,

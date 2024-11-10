@@ -29,7 +29,7 @@ class _ParkingSpotsScreenState extends State<ParkingSpotsScreen> {
         backgroundColor: Colors.blue,
         title: const Center(
           child: Text(
-            "Parking spots",
+            "Parking Spots",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
         ),

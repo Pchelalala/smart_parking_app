@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => widget.child!),
-              (route) => false);
+          (route) => false);
     });
     super.initState();
   }
@@ -24,7 +24,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: darkBgColor,
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(children: [
@@ -47,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "CAR PARKING",
+                      "PARKLY",
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.w600,
@@ -55,23 +54,6 @@ class _SplashScreenState extends State<SplashScreen> {
                     )
                   ],
                 ),
-                const SizedBox(height: 10),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        "This is a Car parking app for Smart car parking station, Here you can find Avalible slot and book your parking slot from any where with you phone",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  ],
-                )
               ],
             ),
           ),

@@ -35,7 +35,7 @@ class _ParkingsScreenState extends State<ParkingsScreen> {
         backgroundColor: Colors.blue,
         actions: [
           IconButton(
-            icon: const Icon(Icons.person),
+            icon: const Icon(Icons.person, color: Colors.white),
             onPressed: _navigateToProfile,
           ),
         ],
