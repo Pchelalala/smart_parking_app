@@ -73,32 +73,7 @@ class _BookingPageState extends State<BookingPage> {
                   thickness: 1,
                   color: Colors.blue,
                 ),
-                const SizedBox(height: 30),
-                const Row(
-                  children: [
-                    Text("Car plates"),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          fillColor: Color(0xFFD1D9E6),
-                          filled: true,
-                          border: InputBorder.none,
-                          prefixIcon: Icon(
-                            Icons.person,
-                            color: Colors.blue,
-                          ),
-                          hintText: "QWE098",
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 50),
                 const Row(
                   children: [
                     Text("Choose Slot Time (in Minutes)"),
