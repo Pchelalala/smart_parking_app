@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:smart_parking_app/features/payment/consts.dart';
 import 'package:smart_parking_app/screens/parkings_screen.dart';
 
 import 'features/app/splash_screen/splash_screen.dart';
@@ -10,6 +12,7 @@ import 'features/user_auth/presentation/pages/sign_up_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = stripePublishableKey;
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(

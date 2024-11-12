@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:smart_parking_app/features/payment/stripe_services.dart';
 
 class BookingPage extends StatefulWidget {
   final String slotName;
@@ -174,6 +175,7 @@ class _BookingPageState extends State<BookingPage> {
                     InkWell(
                       onTap: () {
                         updateData(widget.slotName);
+                        StripeService.instance.makePayment();
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
