@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_parking_app/screens/parking_spots_screen.dart';
+import 'package:smart_parking_app/screens/user_reviews_screen.dart';
 import '../models/parking_place_model.dart';
 
 class ParkingsScreen extends StatefulWidget {
@@ -20,6 +21,15 @@ class _ParkingsScreenState extends State<ParkingsScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => const ParkingSpotsScreen(),
+      ),
+    );
+  }
+
+  void _navigateToUserReviewsScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const UserReviewsScreen(),
       ),
     );
   }
@@ -73,6 +83,10 @@ class _ParkingsScreenState extends State<ParkingsScreen> {
                   title: Text(parking.address ?? 'Unknown Address'),
                   onTap: () =>
                       _navigateToParkingSpotsScreen(parking.address ?? ''),
+                  trailing: TextButton(
+                    onPressed: _navigateToUserReviewsScreen,
+                    child: const Text('Customer Reviews'),
+                  ),
                 ),
               );
             },
