@@ -18,8 +18,9 @@ class _ParkingSpotsScreenState extends State<ParkingSpotsScreen> {
         .collection('parking_slots')
         .orderBy('slotName')
         .snapshots()
-        .map((snapshot) =>
-        snapshot.docs.map((doc) => ParkingSlotModel.fromSnapshot(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => ParkingSlotModel.fromSnapshot(doc))
+            .toList());
   }
 
   @override
@@ -64,7 +65,8 @@ class _ParkingSpotsScreenState extends State<ParkingSpotsScreen> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     if (snapshot.hasError) {
-                      return const Center(child: Text('Error loading parking slots'));
+                      return const Center(
+                          child: Text('Error loading parking slots'));
                     }
 
                     final parkingSlots = snapshot.data ?? [];
@@ -81,7 +83,8 @@ class _ParkingSpotsScreenState extends State<ParkingSpotsScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Row(
                             children: [
-                              Expanded(child: ParkingSlotWidget(parkingSlot: slot1)),
+                              Expanded(
+                                  child: ParkingSlotWidget(parkingSlot: slot1)),
                               if (slot2 != null) ...[
                                 const SizedBox(
                                   width: 60,
@@ -90,7 +93,9 @@ class _ParkingSpotsScreenState extends State<ParkingSpotsScreen> {
                                     thickness: 1,
                                   ),
                                 ),
-                                Expanded(child: ParkingSlotWidget(parkingSlot: slot2)),
+                                Expanded(
+                                    child:
+                                        ParkingSlotWidget(parkingSlot: slot2)),
                               ]
                             ],
                           ),
