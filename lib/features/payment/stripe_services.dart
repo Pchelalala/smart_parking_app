@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:smart_parking_app/features/payment/consts.dart';
@@ -10,77 +10,110 @@ class StripeService {
 
   static final StripeService instance = StripeService._();
 
-  Future<void> makePayment() async {
+  /// Initiates the payment process
+  Future<bool> makePayment() async {
     try {
-      // Create a payment intent on your server
+      // Create Payment Intent
       String? paymentIntentClientSecret = await _createPaymentIntent(10, "usd");
-      if (paymentIntentClientSecret == null) return;
+      if (paymentIntentClientSecret == null) {
+        if (kDebugMode) {
+          print("Failed to create Payment Intent.");
+        }
+        return false;
+      }
 
-      // Initialize the payment sheet with support for Google Pay and Apple Pay
+      // Initialize Payment Sheet
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntentClientSecret,
           merchantDisplayName: "Liudmyla Pcheliakova",
-          style: ThemeMode
-              .system, // Automatically switch between light and dark mode
-          // googlePay: const PaymentSheetGooglePay(
-          //   merchantCountryCode: 'LT',
-          //   currencyCode: 'USD',
-          //   testEnv: true,
-          // ),
-          // applePay: const PaymentSheetApplePay(
-          //   merchantCountryCode: 'LT',
-          // ),
+          style: ThemeMode.system,
         ),
       );
 
-      // Process the payment
-      await _processPayment();
+      // Present the Payment Sheet and process payment
+      bool isPaymentSuccessful = await _processPayment();
+      if (!isPaymentSuccessful) {
+        if (kDebugMode) {
+          print("Payment failed or canceled.");
+        }
+        return false;
+      }
+
+      if (kDebugMode) {
+        print("Payment completed successfully.");
+      }
+      return true;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print("Error during payment: $e");
+      }
+      return false;
     }
   }
 
+  /// Creates a Payment Intent on Stripe
   Future<String?> _createPaymentIntent(int amount, String currency) async {
     try {
-      final Dio dio = Dio();
-      Map<String, dynamic> data = {
+      final dio = Dio();
+      final data = {
         "amount": _calculateAmount(amount),
         "currency": currency,
       };
-      var response = await dio.post(
+
+      final response = await dio.post(
         "https://api.stripe.com/v1/payment_intents",
         data: data,
         options: Options(
           contentType: Headers.formUrlEncodedContentType,
           headers: {
             "Authorization": "Bearer $stripeSecretKey",
-            "Content-Type": 'application/x-www-form-urlencoded'
           },
         ),
       );
-      if (response.data != null) {
+
+      if (response.statusCode == 200 && response.data != null) {
+        if (kDebugMode) {
+          print("Payment Intent created successfully: ${response.data}");
+        }
         return response.data["client_secret"];
+      }
+
+      if (kDebugMode) {
+        print("Failed to create Payment Intent. Response: ${response.data}");
       }
       return null;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print("Error creating Payment Intent: $e");
+      }
+      return null;
     }
-    return null;
   }
 
-  Future<void> _processPayment() async {
+  /// Presents the Payment Sheet and confirms the payment
+  Future<bool> _processPayment() async {
     try {
       await Stripe.instance.presentPaymentSheet();
-      await Stripe.instance.confirmPaymentSheetPayment();
-      print("Payment successful");
+      if (kDebugMode) {
+        print("Payment presented successfully.");
+      }
+      return true;
+    } on StripeException catch (e) {
+          if (kDebugMode) {
+            print("StripeException occurred: $e");
+          }
+      return false;
     } catch (e) {
-      print("Payment failed: $e");
+      if (kDebugMode) {
+        print("Unexpected error during payment: $e");
+      }
+      return false;
     }
   }
 
+  /// Converts the amount to cents (used by Stripe)
   String _calculateAmount(int amount) {
-    final calculatedAmount = amount * 100;
-    return calculatedAmount.toString();
+    return (amount * 100).toString(); // Convert dollars to cents
   }
 }

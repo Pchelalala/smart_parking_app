@@ -24,7 +24,6 @@ class ReceiptScreen extends StatelessWidget {
             Text("Start time: ${receipt.startTime}"),
             Text("End time: ${receipt.endTime}"),
             Text("Amount: ${receipt.amountPaid.toStringAsFixed(2)} ₽"),
-            Text("Transaction ID: ${receipt.transactionId}"),
           ],
         ),
       ),

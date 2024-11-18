@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:smart_parking_app/features/payment/stripe_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:smart_parking_app/screens/receipt_screen.dart';
+import '../models/receipt_model.dart';
 
 class BookingPage extends StatefulWidget {
   final String slotName;
@@ -13,6 +18,78 @@ class BookingPage extends StatefulWidget {
 class _BookingPageState extends State<BookingPage> {
   double parkingHours = 10;
   double amountPay = 0;
+  bool _isBooked = false;
+
+  Future<String> fetchCarPlates() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      return snapshot.data()?['carPlates'] ?? 'Anonymous';
+    }
+    return 'Anonymous';
+  }
+
+  Future<void> _bookSpot() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('You must be logged in to book a spot.')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isBooked = true;
+    });
+
+    try {
+      final carPlates = await fetchCarPlates();
+      final receipt = ReceiptModel(
+        parkingSpotName: widget.slotName,
+        userCarPlate: carPlates,
+        startTime: DateTime.now(),
+        endTime: DateTime.now().add(const Duration(hours: 2)),
+        amountPaid: 10.0,
+      );
+
+      // Платеж
+      final bool paymentSuccess = await StripeService.instance.makePayment();
+      if (!paymentSuccess) {
+        throw Exception('Payment failed');
+      }
+
+      // Сохранение данных
+      await FirebaseFirestore.instance.collection('receipts').add(receipt.toJson());
+
+      // Навигация на следующий экран
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReceiptScreen(receipt: receipt),
+          ),
+        );
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Booked successfully!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isBooked = false;
+        });
+      }
+    }
+  }
+
 
   void amountCalculator() {
     setState(() {
@@ -22,7 +99,9 @@ class _BookingPageState extends State<BookingPage> {
 
   void updateData(String slotId) {
     // Add update logic here
-    print("Booking slot with ID: $slotId");
+    if (kDebugMode) {
+      print("Booking slot with ID: $slotId");
+    }
   }
 
   @override
@@ -172,10 +251,9 @@ class _BookingPageState extends State<BookingPage> {
                         ),
                       ],
                     ),
-                    InkWell(
-                      onTap: () {
-                        updateData(widget.slotName);
-                        StripeService.instance.makePayment();
+                    ElevatedButton(
+                      onPressed: () {
+                        _bookSpot();
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(

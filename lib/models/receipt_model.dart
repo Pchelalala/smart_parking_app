@@ -6,7 +6,6 @@ class ReceiptModel {
   final DateTime startTime;
   final DateTime endTime;
   final double amountPaid;
-  final String transactionId;
 
   ReceiptModel({
     required this.parkingSpotName,
@@ -14,7 +13,6 @@ class ReceiptModel {
     required this.startTime,
     required this.endTime,
     required this.amountPaid,
-    required this.transactionId,
   });
 
   // Convert Firestore document data to UserModel
@@ -26,7 +24,6 @@ class ReceiptModel {
       startTime: (snapshot['startTime'] as Timestamp).toDate(),
       endTime: (snapshot['endTime'] as Timestamp).toDate(),
       amountPaid: snapshot['amountPaid'],
-      transactionId: snapshot['transactionId'],
     );
   }
 
@@ -38,7 +35,6 @@ class ReceiptModel {
       'startTime': Timestamp.fromDate(startTime),
       'endTime': Timestamp.fromDate(endTime),
       'amountPaid': amountPaid,
-      'transactionId': transactionId,
     };
   }
 }

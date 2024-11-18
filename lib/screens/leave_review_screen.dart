@@ -64,13 +64,6 @@ class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Review submitted successfully!')),
     );
-
-
-    // // Clear the form
-    // _reviewTextController.clear();
-    // setState(() {
-    //   _rating = 5;
-    // });
   }
 
   @override
