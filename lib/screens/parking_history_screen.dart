@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smart_parking_app/screens/receipt_screen.dart';
 import '../models/receipt_model.dart';
 
@@ -11,6 +12,33 @@ class ParkingHistoryScreen extends StatefulWidget {
 }
 
 class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
+  // Получаем информацию о текущем пользователе
+  String? currentUserCarPlate;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserCarPlate();
+  }
+
+  // Получаем номер машины текущего пользователя
+  Future<void> _getUserCarPlate() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Получаем номер машины пользователя из Firestore
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userDoc.exists) {
+        setState(() {
+          currentUserCarPlate = userDoc['carPlates']; // Предположим, что в Firestore у пользователя есть поле carPlate
+        });
+      }
+    }
+  }
+
   void _navigateToProfile() {
     Navigator.pushNamed(context, '/home');
   }
@@ -26,6 +54,11 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (currentUserCarPlate == null) {
+      // Пока мы не получили номер машины, показываем индикатор загрузки
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -41,7 +74,10 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
         ],
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseFirestore.instance.collection('receipts').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('receipts')
+            .where('userCarPlate', isEqualTo: currentUserCarPlate) // Фильтрация по номеру машины
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
