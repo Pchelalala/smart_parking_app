@@ -20,6 +20,26 @@ class _BookingPageState extends State<BookingPage> {
   double amountPay = 0;
   bool _isBooked = false;
 
+  Future<bool> checkActiveBooking(String carPlates) async {
+    final now = DateTime.now();
+
+    // Получаем все бронирования для указанного номера машины
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('receipts')
+        .where('userCarPlate', isEqualTo: carPlates)
+        .get();
+
+    // Фильтруем только те, которые активны (по endTime)
+    final filteredDocs = querySnapshot.docs.where((doc) {
+      final endTime = (doc['endTime'] as Timestamp).toDate();
+      return endTime.isAfter(now);
+    }).toList();
+
+    // Если есть активные бронирования, возвращаем true
+    return filteredDocs.isNotEmpty;
+  }
+
+
   Future<String> fetchCarPlates() async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId != null) {
@@ -41,12 +61,23 @@ class _BookingPageState extends State<BookingPage> {
       return;
     }
 
-    setState(() {
-      _isBooked = true;
-    });
-
     try {
       final carPlates = await fetchCarPlates();
+
+      // Проверка активных бронирований
+      final hasActiveBooking = await checkActiveBooking(carPlates);
+      if (hasActiveBooking) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('You already have an active booking.')),
+        );
+        return;
+      }
+
+      // Остальная логика бронирования
+      setState(() {
+        _isBooked = true;
+      });
+
       final receipt = ReceiptModel(
         parkingSpotName: widget.slotName,
         userCarPlate: carPlates,
@@ -62,7 +93,9 @@ class _BookingPageState extends State<BookingPage> {
       }
 
       // Сохранение данных
-      await FirebaseFirestore.instance.collection('receipts').add(receipt.toJson());
+      await FirebaseFirestore.instance
+          .collection('receipts')
+          .add(receipt.toJson());
 
       // Навигация на следующий экран
       if (mounted) {
@@ -89,7 +122,6 @@ class _BookingPageState extends State<BookingPage> {
       }
     }
   }
-
 
   void amountCalculator() {
     setState(() {
