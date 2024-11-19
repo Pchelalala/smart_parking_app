@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../../global/common/toast.dart';
 import '../../../../models/user_model.dart';
 import '../../../../screens/edit_profile_screen.dart';
+import '../../../../screens/parking_history_screen.dart';
 import '../../../../screens/parkings_screen.dart';
 import '../../../../screens/profile_setup_screen.dart';
 
@@ -120,7 +121,12 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 10),
                     TextButton(
                       onPressed: () {
-                        // Your code for viewing parking history
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ParkingHistoryScreen(),
+                          ),
+                        );
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.blue,

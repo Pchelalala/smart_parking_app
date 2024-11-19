@@ -100,9 +100,9 @@ class StripeService {
       }
       return true;
     } on StripeException catch (e) {
-          if (kDebugMode) {
-            print("StripeException occurred: $e");
-          }
+      if (kDebugMode) {
+        print("StripeException occurred: $e");
+      }
       return false;
     } catch (e) {
       if (kDebugMode) {
