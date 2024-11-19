@@ -33,7 +33,8 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
 
       if (userDoc.exists) {
         setState(() {
-          currentUserCarPlate = userDoc['carPlates']; // Предположим, что в Firestore у пользователя есть поле carPlate
+          currentUserCarPlate = userDoc[
+              'carPlates']; // Предположим, что в Firestore у пользователя есть поле carPlate
         });
       }
     }
@@ -76,7 +77,8 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
             .collection('receipts')
-            .where('userCarPlate', isEqualTo: currentUserCarPlate) // Фильтрация по номеру машины
+            .where('userCarPlate',
+                isEqualTo: currentUserCarPlate) // Фильтрация по номеру машины
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -103,7 +105,7 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
                   title: Text(receipt.parkingSpotName),
                   subtitle: Text(
                     'Paid: \$${receipt.amountPaid.toStringAsFixed(2)} | '
-                        'Plate: ${receipt.userCarPlate}',
+                    'Plate: ${receipt.userCarPlate}',
                   ),
                   trailing: const Icon(Icons.arrow_forward),
                   onTap: () => _navigateToReceiptDetails(receipt),
