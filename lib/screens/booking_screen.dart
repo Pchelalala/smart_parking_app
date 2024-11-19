@@ -16,29 +16,25 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
-  double parkingHours = 10;
-  double amountPay = 0;
+  double parkingHours = 1;
+  double amountPay = 1.5;
   bool _isBooked = false;
 
   Future<bool> checkActiveBooking(String carPlates) async {
     final now = DateTime.now();
 
-    // Получаем все бронирования для указанного номера машины
     final querySnapshot = await FirebaseFirestore.instance
         .collection('receipts')
         .where('userCarPlate', isEqualTo: carPlates)
         .get();
 
-    // Фильтруем только те, которые активны (по endTime)
     final filteredDocs = querySnapshot.docs.where((doc) {
       final endTime = (doc['endTime'] as Timestamp).toDate();
       return endTime.isAfter(now);
     }).toList();
 
-    // Если есть активные бронирования, возвращаем true
     return filteredDocs.isNotEmpty;
   }
-
 
   Future<String> fetchCarPlates() async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
@@ -64,7 +60,6 @@ class _BookingPageState extends State<BookingPage> {
     try {
       final carPlates = await fetchCarPlates();
 
-      // Проверка активных бронирований
       final hasActiveBooking = await checkActiveBooking(carPlates);
       if (hasActiveBooking) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -73,7 +68,6 @@ class _BookingPageState extends State<BookingPage> {
         return;
       }
 
-      // Остальная логика бронирования
       setState(() {
         _isBooked = true;
       });
@@ -86,18 +80,15 @@ class _BookingPageState extends State<BookingPage> {
         amountPaid: 10.0,
       );
 
-      // Платеж
       final bool paymentSuccess = await StripeService.instance.makePayment();
       if (!paymentSuccess) {
         throw Exception('Payment failed');
       }
 
-      // Сохранение данных
       await FirebaseFirestore.instance
           .collection('receipts')
           .add(receipt.toJson());
 
-      // Навигация на следующий экран
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -125,7 +116,7 @@ class _BookingPageState extends State<BookingPage> {
 
   void amountCalculator() {
     setState(() {
-      amountPay = parkingHours * 10;
+      amountPay = parkingHours * 1.5;
     });
   }
 
@@ -134,6 +125,12 @@ class _BookingPageState extends State<BookingPage> {
     if (kDebugMode) {
       print("Booking slot with ID: $slotId");
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    amountCalculator();
   }
 
   @override
@@ -188,7 +185,7 @@ class _BookingPageState extends State<BookingPage> {
                 const SizedBox(height: 50),
                 const Row(
                   children: [
-                    Text("Choose Slot Time (in Minutes)"),
+                    Text("Choose Slot Time (in Hours)"),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -205,20 +202,20 @@ class _BookingPageState extends State<BookingPage> {
                     });
                   },
                   divisions: 5,
-                  min: 10,
-                  max: 60,
+                  min: 1,
+                  max: 6,
                 ),
                 const Padding(
-                  padding: EdgeInsets.only(left: 10, right: 20),
+                  padding: EdgeInsets.only(left: 20, right: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("10"),
-                      Text("20"),
-                      Text("30"),
-                      Text("40"),
-                      Text("50"),
-                      Text("60"),
+                      Text("1"),
+                      Text("2"),
+                      Text("3"),
+                      Text("4"),
+                      Text("5"),
+                      Text("6"),
                     ],
                   ),
                 ),
