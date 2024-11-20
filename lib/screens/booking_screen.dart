@@ -80,14 +80,17 @@ class _BookingPageState extends State<BookingPage> {
         amountPaid: 10.0,
       );
 
+      final qrData = receipt.qrData;
+
       final bool paymentSuccess = await StripeService.instance.makePayment();
       if (!paymentSuccess) {
         throw Exception('Payment failed');
       }
 
-      await FirebaseFirestore.instance
-          .collection('receipts')
-          .add(receipt.toJson());
+      await FirebaseFirestore.instance.collection('receipts').add({
+        ...receipt.toJson(),
+        'qrData': qrData,
+      });
 
       if (mounted) {
         Navigator.pushReplacement(

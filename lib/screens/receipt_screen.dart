@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../models/receipt_model.dart';
 
 class ReceiptScreen extends StatelessWidget {
@@ -24,6 +25,25 @@ class ReceiptScreen extends StatelessWidget {
             Text("Start time: ${receipt.startTime}"),
             Text("End time: ${receipt.endTime}"),
             Text("Amount: ${receipt.amountPaid.toStringAsFixed(2)} ₽"),
+            const SizedBox(height: 20),
+            Center(
+              child: QrImageView(
+                data: receipt.qrData,
+                version: QrVersions.auto,
+                size: 200.0,
+                gapless: false,
+                embeddedImageStyle:
+                    const QrEmbeddedImageStyle(size: Size(40, 40)),
+                errorCorrectionLevel: QrErrorCorrectLevel.H,
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Center(
+              child: Text(
+                "Scan the QR code for details",
+                style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+              ),
+            ),
           ],
         ),
       ),

@@ -6,6 +6,7 @@ class ReceiptModel {
   final DateTime startTime;
   final DateTime endTime;
   final double amountPaid;
+  final String qrData;
 
   ReceiptModel({
     required this.parkingSpotName,
@@ -13,9 +14,10 @@ class ReceiptModel {
     required this.startTime,
     required this.endTime,
     required this.amountPaid,
-  });
+  }) : qrData =
+            'Parking Spot: $parkingSpotName\nCar Plate: $userCarPlate\nStart Time: $startTime\nEnd Time: $endTime\nAmount Paid: $amountPaid Є';
 
-  // Convert Firestore document data to UserModel
+  // Конвертация Firestore документа в модель
   static ReceiptModel fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     return ReceiptModel(
@@ -27,7 +29,7 @@ class ReceiptModel {
     );
   }
 
-  // Convert UserModel to a Map for saving to Firestore
+  // Конвертация модели в Map для сохранения в Firestore
   Map<String, dynamic> toJson() {
     return {
       'parkingSpotName': parkingSpotName,
@@ -35,6 +37,7 @@ class ReceiptModel {
       'startTime': Timestamp.fromDate(startTime),
       'endTime': Timestamp.fromDate(endTime),
       'amountPaid': amountPaid,
+      'qrData': qrData, // Сохранение данных QR-кода
     };
   }
 }
