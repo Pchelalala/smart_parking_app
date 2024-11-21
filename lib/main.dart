@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:smart_parking_app/API/firebase_api.dart';
 import 'package:smart_parking_app/features/payment/consts.dart';
 import 'package:smart_parking_app/screens/parkings_screen.dart';
 
@@ -9,6 +10,8 @@ import 'features/app/splash_screen/splash_screen.dart';
 import 'features/user_auth/presentation/pages/home.dart';
 import 'features/user_auth/presentation/pages/login_page.dart';
 import 'features/user_auth/presentation/pages/sign_up_page.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +25,7 @@ Future main() async {
             projectId: "smart-parking-app-b7155"));
   } else {
     await Firebase.initializeApp();
+    await FirebaseApi().initNotifications();
   }
   runApp(const MyApp());
 }
@@ -33,6 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Smart Parking App',
+      navigatorKey: navigatorKey,
       home: const SplashScreen(
         child: LoginPage(),
       ),
