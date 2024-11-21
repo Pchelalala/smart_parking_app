@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../features/user_auth/presentation/pages/home.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   final String userId;
@@ -28,7 +27,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     });
 
     try {
-      // Save the user profile data to Firestore
       await FirebaseFirestore.instance
           .collection('users')
           .doc(widget.userId)
@@ -37,17 +35,14 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         'lastName': _lastNameController.text.trim(),
         'carPlates': _carPlatesController.text.trim(),
         'profileImageUrl':
-            'https://via.placeholder.com/150', // Default placeholder image
+            'https://via.placeholder.com/150',
       });
 
-      // Navigate back to the HomePage after saving
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
+      Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
-      // Handle errors here, for example with a toast or dialog
-      print("Error saving profile: $e");
+      if (kDebugMode) {
+        print("Error saving profile: $e");
+      }
     } finally {
       setState(() {
         _isSaving = false;

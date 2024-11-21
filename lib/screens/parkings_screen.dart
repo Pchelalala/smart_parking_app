@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_parking_app/screens/parking_spots_screen.dart';
-import 'package:smart_parking_app/screens/user_reviews_screen.dart';
 import '../features/gps_navigation/navigation_helper.dart';
 import '../models/parking_place_model.dart';
 
@@ -18,28 +17,20 @@ class _ParkingsScreenState extends State<ParkingsScreen> {
   }
 
   void _navigateToParkingSpotsScreen(String address) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ParkingSpotsScreen(),
-      ),
-    );
+    Navigator.pushNamed(context, '/parkingSpots');
   }
 
   void _navigateToUserReviewsScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const UserReviewsScreen(),
-      ),
-    );
+    Navigator.pushNamed(context, '/userReview');
   }
 
   void _navigateToSpot(double latitude, double longitude) {
     try {
       NavigationHelper.openMap(latitude, longitude);
     } catch (e) {
-      print('Failed to open map: $e');
+      if (kDebugMode) {
+        print('Failed to open map: $e');
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Failed to open map'),

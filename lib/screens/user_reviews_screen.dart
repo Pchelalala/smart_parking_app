@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'leave_review_screen.dart';
 import 'package:intl/intl.dart';
 
 class UserReviewsScreen extends StatefulWidget {
@@ -13,10 +12,11 @@ class UserReviewsScreen extends StatefulWidget {
 class _UserReviewsScreenState extends State<UserReviewsScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Stream to listen to changes in the reviews collection
   Stream<List<Map<String, dynamic>>> getReviewsStream() {
-    return _firestore.collection('reviews').snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList());
+    return _firestore
+        .collection('reviews')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
   void _navigateToProfile() {
@@ -24,10 +24,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
   }
 
   void _navigateToLeaveReviewScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const LeaveReviewScreen()),
-    );
+    Navigator.pushNamed(context, '/leaveReview');
   }
 
   List<Widget> _buildStarRating(int starCount) {

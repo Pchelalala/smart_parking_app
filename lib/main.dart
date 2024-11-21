@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:smart_parking_app/API/firebase_api.dart';
 import 'package:smart_parking_app/features/payment/consts.dart';
+import 'package:smart_parking_app/screens/leave_review_screen.dart';
+import 'package:smart_parking_app/screens/parking_spots_screen.dart';
 import 'package:smart_parking_app/screens/parkings_screen.dart';
+import 'package:smart_parking_app/screens/user_reviews_screen.dart';
 
 import 'features/app/splash_screen/splash_screen.dart';
 import 'features/user_auth/presentation/pages/home.dart';
@@ -42,14 +45,13 @@ class MyApp extends StatelessWidget {
         child: LoginPage(),
       ),
       routes: {
-        // '/': (context) => const SplashScreen(
-        //   // Here decide whether to show the LoginPage or HomePage based on user authentication
-        //   child: LoginPage(),
-        // ),
         '/login': (context) => const LoginPage(),
         '/signUp': (context) => const SignUpPage(),
         '/home': (context) => const HomePage(),
-        '/parkings': (context) => const ParkingsScreen()
+        '/parkings': (context) => const ParkingsScreen(),
+        '/parkingSpots': (context) => const ParkingSpotsScreen(),
+        '/userReview': (context) => const UserReviewsScreen(),
+        '/leaveReview': (context) => const LeaveReviewScreen(),
       },
     );
   }
