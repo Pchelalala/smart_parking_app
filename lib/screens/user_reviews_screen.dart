@@ -18,7 +18,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
   }
 
   void _navigateToProfile() {
-    Navigator.pushNamed(context, '/home');
+    Navigator.pushNamed(context, '/profile');
   }
 
   void _navigateToLeaveReviewScreen() {

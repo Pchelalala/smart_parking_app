@@ -32,12 +32,6 @@ class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.blue,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person, color: Colors.white),
-            onPressed: () => _controller.navigateToProfile(),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

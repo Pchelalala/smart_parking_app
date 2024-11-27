@@ -3,7 +3,7 @@ import '../features/gps_navigation/navigation_helper.dart';
 
 class ParkingsController {
   void navigateToProfile(BuildContext context) {
-    Navigator.pushNamed(context, '/home');
+    Navigator.pushNamed(context, '/profile');
   }
 
   void navigateToParkingSpotsScreen(BuildContext context, String address) {

@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../components/toast.dart';
-import '../features/user_auth/firebase_auth_services.dart';
 import '../components/from_container_widget.dart';
+import '../controllers/signup_controller.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -14,12 +14,11 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final FirebaseAuthService _auth = FirebaseAuthService();
+  final SignUpController _controller =
+      SignUpController(); // Instantiate the controller
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  bool isSigningUp = false;
 
   @override
   void dispose() {
@@ -75,7 +74,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
-                      child: isSigningUp
+                      child: _controller.isSigningUp
                           ? const CircularProgressIndicator(
                               color: Colors.white,
                             )
@@ -120,21 +119,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _signUp() async {
-    setState(() {
-      isSigningUp = true;
-    });
-
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+    User? user = await _controller.signUp(email, password);
 
-    setState(() {
-      isSigningUp = false;
-    });
     if (user != null) {
       showToast(message: "User is successfully created");
-      Navigator.pushReplacementNamed(context, "/home");
+      Navigator.pushReplacementNamed(context, "/profile");
     } else {
       showToast(message: "Some error happened");
     }

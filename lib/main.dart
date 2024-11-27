@@ -10,7 +10,7 @@ import 'package:smart_parking_app/screens/parkings_screen.dart';
 import 'package:smart_parking_app/screens/user_reviews_screen.dart';
 
 import 'screens/splash_screen.dart';
-import 'screens/home_screen.dart';
+import 'screens/user_profile_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/sign_up_screen.dart';
 
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/signUp': (context) => const SignUpScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/profile': (context) => const UserProfileScreen(),
         '/parkings': (context) => const ParkingsScreen(),
         '/parkingSpots': (context) => const ParkingSpotsScreen(),
         '/userReview': (context) => const UserReviewsScreen(),

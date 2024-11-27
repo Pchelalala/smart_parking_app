@@ -28,7 +28,7 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
   }
 
   void _navigateToProfile() {
-    Navigator.pushNamed(context, '/home');
+    Navigator.pushNamed(context, '/profile');
   }
 
   void _navigateToReceiptDetails(ReceiptModel receipt) {

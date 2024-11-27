@@ -1,11 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:smart_parking_app/features/payment/stripe_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:smart_parking_app/controllers/booking_controller.dart';
 import 'package:smart_parking_app/screens/receipt_screen.dart';
-import '../models/receipt_model.dart';
 
 class BookingPage extends StatefulWidget {
   final String slotName;
@@ -20,102 +16,7 @@ class _BookingPageState extends State<BookingPage> {
   double amountPay = 1.5;
   bool _isBooked = false;
 
-  Future<bool> checkActiveBooking(String carPlates) async {
-    final now = DateTime.now();
-
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('receipts')
-        .where('userCarPlate', isEqualTo: carPlates)
-        .get();
-
-    final filteredDocs = querySnapshot.docs.where((doc) {
-      final endTime = (doc['endTime'] as Timestamp).toDate();
-      return endTime.isAfter(now);
-    }).toList();
-
-    return filteredDocs.isNotEmpty;
-  }
-
-  Future<String> fetchCarPlates() async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId != null) {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-      return snapshot.data()?['carPlates'] ?? 'Anonymous';
-    }
-    return 'Anonymous';
-  }
-
-  Future<void> _bookSpot() async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('You must be logged in to book a spot.')),
-      );
-      return;
-    }
-
-    try {
-      final carPlates = await fetchCarPlates();
-
-      final hasActiveBooking = await checkActiveBooking(carPlates);
-      if (hasActiveBooking) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('You already have an active booking.')),
-        );
-        return;
-      }
-
-      setState(() {
-        _isBooked = true;
-      });
-
-      final receipt = ReceiptModel(
-        parkingSpotName: widget.slotName,
-        userCarPlate: carPlates,
-        startTime: DateTime.now(),
-        endTime: DateTime.now().add(const Duration(hours: 2)),
-        amountPaid: 10.0,
-      );
-
-      final qrData = receipt.qrData;
-
-      final bool paymentSuccess = await StripeService.instance.makePayment();
-      if (!paymentSuccess) {
-        throw Exception('Payment failed');
-      }
-
-      await FirebaseFirestore.instance.collection('receipts').add({
-        ...receipt.toJson(),
-        'qrData': qrData,
-      });
-
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ReceiptScreen(receipt: receipt),
-          ),
-        );
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Booked successfully!')),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isBooked = false;
-        });
-      }
-    }
-  }
+  final BookingController _bookingController = BookingController();
 
   void amountCalculator() {
     setState(() {
@@ -123,11 +24,38 @@ class _BookingPageState extends State<BookingPage> {
     });
   }
 
-  void updateData(String slotId) {
-    // Add update logic here
-    if (kDebugMode) {
-      print("Booking slot with ID: $slotId");
-    }
+  Future<void> _bookSpot() async {
+    setState(() {
+      _isBooked = true;
+    });
+
+    await _bookingController.bookSpot(
+      slotName: widget.slotName,
+      amountPaid: amountPay,
+      onError: (message) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $message')),
+        );
+        setState(() {
+          _isBooked = false;
+        });
+      },
+      onSuccess: (receipt) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReceiptScreen(receipt: receipt),
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Booked successfully!')),
+        );
+      },
+    );
+
+    setState(() {
+      _isBooked = false;
+    });
   }
 
   @override
@@ -173,7 +101,7 @@ class _BookingPageState extends State<BookingPage> {
                 const Row(
                   children: [
                     Text(
-                      "Book Now 😊",
+                      "Book Now!",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -181,10 +109,7 @@ class _BookingPageState extends State<BookingPage> {
                     )
                   ],
                 ),
-                const Divider(
-                  thickness: 1,
-                  color: Colors.blue,
-                ),
+                const Divider(thickness: 1, color: Colors.blue),
                 const SizedBox(height: 50),
                 const Row(
                   children: [
@@ -266,11 +191,8 @@ class _BookingPageState extends State<BookingPage> {
                         ),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.currency_pound,
-                              size: 30,
-                              color: Colors.blue,
-                            ),
+                            const Icon(Icons.currency_pound,
+                                size: 30, color: Colors.blue),
                             Text(
                               amountPay.toString(),
                               style: const TextStyle(
@@ -284,9 +206,7 @@ class _BookingPageState extends State<BookingPage> {
                       ],
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        _bookSpot();
-                      },
+                      onPressed: _isBooked ? null : _bookSpot,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 60, vertical: 20),

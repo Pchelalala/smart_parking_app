@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../components/floot_selector.dart';
 import '../components/parking_slot_widget.dart';
 import '../models/parking_slot_model.dart';
+import '../controllers/parking_spots_controller.dart';
 
 class ParkingSpotsScreen extends StatefulWidget {
   const ParkingSpotsScreen({super.key});
@@ -13,15 +13,7 @@ class ParkingSpotsScreen extends StatefulWidget {
 }
 
 class _ParkingSpotsScreenState extends State<ParkingSpotsScreen> {
-  Stream<List<ParkingSlotModel>> _fetchParkingSlots() {
-    return FirebaseFirestore.instance
-        .collection('parking_slots')
-        .orderBy('slotName')
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => ParkingSlotModel.fromSnapshot(doc))
-            .toList());
-  }
+  final ParkingSpotsController _controller = ParkingSpotsController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +28,7 @@ class _ParkingSpotsScreenState extends State<ParkingSpotsScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, "/home"),
+            onPressed: () => Navigator.pushNamed(context, "/profile"),
             icon: const Icon(Icons.person, color: Colors.white),
           ),
         ],
@@ -59,7 +51,7 @@ class _ParkingSpotsScreenState extends State<ParkingSpotsScreen> {
               const SizedBox(height: 20),
               Expanded(
                 child: StreamBuilder<List<ParkingSlotModel>>(
-                  stream: _fetchParkingSlots(),
+                  stream: _controller.fetchParkingSlots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());

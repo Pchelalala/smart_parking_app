@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_parking_app/screens/user_reviews_screen.dart';
 import '../models/review_model.dart';
-import '../screens/home_screen.dart';
 
 class ReviewController {
   late BuildContext _context;
@@ -18,10 +17,6 @@ class ReviewController {
 
   void dispose() {
     reviewTextController.dispose();
-  }
-
-  Future<void> navigateToProfile() async {
-    Navigator.pushNamed(_context, '/home');
   }
 
   void setRating(int newRating) {
