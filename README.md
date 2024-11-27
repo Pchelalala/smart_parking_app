@@ -1,16 +1,59 @@
-# smart_parking_app
+# Smart Parking App 🚗📱
 
-A new Flutter project.
+## 🚀 Functions
 
-## Getting Started
+### 1. **User Authorization**
+- Login
+- Login with Google
+- Sign-Up
+- Logout
 
-This project is a starting point for a Flutter application.
+### 2. **Profile Management**
+- Setup Profile
+- Edit Profile
 
-A few resources to get you started if this is your first Flutter project:
+### 3. **Real-Time Parking Space Availability**
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 4. **Parking Space Reservation**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 5. **Payment Integration**
+- Payment with debit/credit card
+- Payment with Apple/Google Pay
+- Payment with PayPal
+- Payment with cryptocurrency
+
+### 6. **GPS Navigation to Parking Spot**
+
+### 7. **Push Notifications**
+
+### 8. **Parking History and Receipts**
+
+### 9. **Feedback Sharing**
+
+---
+
+## 🗂️ Firebase Integration
+
+The app uses **Firebase** to power its backend services:
+- **Authentication**: For secure user login and sign-up.
+- **Firestore**: To store and retrieve real-time parking and user data.
+- **Firebase Storage**: To manage media files like profile images.
+- **Firebase Messaging**: To send push notifications.
+
+---
+
+## 📖 How to Run
+
+1. Clone the repository:  
+   `git clone https://github.com/Pchelalala/smart-parking-app.git`  
+   `cd smart-parking-app`
+
+2. Install dependencies:  
+   `flutter pub get`
+
+3. Set up Firebase:
+    - Add `google-services.json` to the `android/app` directory.
+    - Add `GoogleService-Info.plist` to the `ios/Runner` directory.
+
+4. Run the app:  
+   `flutter run`
