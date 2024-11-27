@@ -7,6 +7,7 @@
 - Login with Google
 - Sign-Up
 - Logout
+- Forgot Password
 
 ### 2. **Profile Management**
 - Setup Profile
@@ -18,7 +19,7 @@
 
 ### 5. **Payment Integration**
 - Payment with debit/credit card
-- Payment with Apple/Google Pay
+- Payment with Google Pay
 - Payment with PayPal
 - Payment with cryptocurrency
 
