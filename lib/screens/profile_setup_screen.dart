@@ -34,8 +34,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         'firstName': _firstNameController.text.trim(),
         'lastName': _lastNameController.text.trim(),
         'carPlates': _carPlatesController.text.trim(),
-        'profileImageUrl':
-            'https://via.placeholder.com/150',
+        'profileImageUrl': 'https://via.placeholder.com/150',
       });
 
       Navigator.pushReplacementNamed(context, '/home');

@@ -2,17 +2,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:smart_parking_app/API/firebase_api.dart';
+import 'package:smart_parking_app/features/notifications/firebase_notification_api.dart';
 import 'package:smart_parking_app/features/payment/consts.dart';
 import 'package:smart_parking_app/screens/leave_review_screen.dart';
 import 'package:smart_parking_app/screens/parking_spots_screen.dart';
 import 'package:smart_parking_app/screens/parkings_screen.dart';
 import 'package:smart_parking_app/screens/user_reviews_screen.dart';
 
-import 'features/app/splash_screen/splash_screen.dart';
-import 'features/user_auth/presentation/pages/home.dart';
-import 'features/user_auth/presentation/pages/login_page.dart';
-import 'features/user_auth/presentation/pages/sign_up_page.dart';
+import 'screens/splash_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/sign_up_screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -42,12 +42,12 @@ class MyApp extends StatelessWidget {
       title: 'Smart Parking App',
       navigatorKey: navigatorKey,
       home: const SplashScreen(
-        child: LoginPage(),
+        child: LoginScreen(),
       ),
       routes: {
-        '/login': (context) => const LoginPage(),
-        '/signUp': (context) => const SignUpPage(),
-        '/home': (context) => const HomePage(),
+        '/login': (context) => const LoginScreen(),
+        '/signUp': (context) => const SignUpScreen(),
+        '/home': (context) => const HomeScreen(),
         '/parkings': (context) => const ParkingsScreen(),
         '/parkingSpots': (context) => const ParkingSpotsScreen(),
         '/userReview': (context) => const UserReviewsScreen(),

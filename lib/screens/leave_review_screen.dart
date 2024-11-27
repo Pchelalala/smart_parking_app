@@ -118,7 +118,8 @@ class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
                 onPressed: _isSubmitting ? null : _submitReview,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                 ),
                 child: _isSubmitting
                     ? const CircularProgressIndicator(color: Colors.white)

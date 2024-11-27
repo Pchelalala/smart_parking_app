@@ -12,7 +12,6 @@ class ParkingHistoryScreen extends StatefulWidget {
 }
 
 class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
-  // Получаем информацию о текущем пользователе
   String? currentUserCarPlate;
 
   @override
@@ -21,11 +20,9 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
     _getUserCarPlate();
   }
 
-  // Получаем номер машины текущего пользователя
   Future<void> _getUserCarPlate() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Получаем номер машины пользователя из Firestore
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
@@ -33,8 +30,7 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
 
       if (userDoc.exists) {
         setState(() {
-          currentUserCarPlate = userDoc[
-              'carPlates']; // Предположим, что в Firestore у пользователя есть поле carPlate
+          currentUserCarPlate = userDoc['carPlates'];
         });
       }
     }
@@ -56,7 +52,6 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     if (currentUserCarPlate == null) {
-      // Пока мы не получили номер машины, показываем индикатор загрузки
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -77,8 +72,7 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
             .collection('receipts')
-            .where('userCarPlate',
-                isEqualTo: currentUserCarPlate) // Фильтрация по номеру машины
+            .where('userCarPlate', isEqualTo: currentUserCarPlate)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

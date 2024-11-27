@@ -2,21 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../global/common/toast.dart';
-import '../../../../models/user_model.dart';
-import '../../../../screens/edit_profile_screen.dart';
-import '../../../../screens/parking_history_screen.dart';
-import '../../../../screens/parkings_screen.dart';
-import '../../../../screens/profile_setup_screen.dart';
+import '../components/toast.dart';
+import '../models/user_model.dart';
+import 'edit_profile_screen.dart';
+import 'parking_history_screen.dart';
+import 'parkings_screen.dart';
+import 'profile_setup_screen.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   UserModel? _user;
   bool _isLoading = true;
   int _selectedIndex = 0;

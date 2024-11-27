@@ -4,20 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:smart_parking_app/features/user_auth/presentation/pages/sign_up_page.dart';
+import 'package:smart_parking_app/screens/sign_up_screen.dart';
 
-import '../../../../global/common/toast.dart';
-import '../../firebase_auth_implemetation/firebase_auth_services.dart';
-import '../widgets/from_container_widget.dart';
+import '../components/toast.dart';
+import '../features/user_auth/firebase_auth_services.dart';
+import '../components/from_container_widget.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   bool _isSigning = false;
   final FirebaseAuthService _auth = FirebaseAuthService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -141,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SignUpPage()),
+                            builder: (context) => const SignUpScreen()),
                         (route) => false,
                       );
                     },

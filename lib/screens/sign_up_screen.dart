@@ -1,19 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../global/common/toast.dart';
-import '../../firebase_auth_implemetation/firebase_auth_services.dart';
-import '../widgets/from_container_widget.dart';
-import 'login_page.dart';
+import '../components/toast.dart';
+import '../features/user_auth/firebase_auth_services.dart';
+import '../components/from_container_widget.dart';
+import 'login_screen.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final FirebaseAuthService _auth = FirebaseAuthService();
 
   final TextEditingController _usernameController = TextEditingController();
@@ -109,7 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginPage()),
+                                builder: (context) => const LoginScreen()),
                             (route) => false);
                       },
                       child: const Text(
