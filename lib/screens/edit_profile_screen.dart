@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import '../controllers/edit_profile_controller.dart';
 import '../models/user_model.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -18,10 +16,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late String firstName;
   late String lastName;
   late String carPlates;
+  late EditProfileController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = EditProfileController(widget.user);
+
     firstName = widget.user.firstName ?? '';
     lastName = widget.user.lastName ?? '';
     carPlates = widget.user.carPlates ?? '';
@@ -29,21 +30,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _saveProfile() async {
     if (_formKey.currentState!.validate()) {
-      // Update the user data
-      final updatedUser = UserModel(
-        firstName: firstName,
-        lastName: lastName,
-        carPlates: carPlates,
-        profileImageUrl: widget.user.profileImageUrl,
-      );
-
-      // Save to Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .set(updatedUser.toJson());
-
-      Navigator.pop(context, updatedUser); // Return updated user
+      await controller.saveProfile(firstName, lastName, carPlates);
+      Navigator.pop(
+          context,
+          UserModel(
+            firstName: firstName,
+            lastName: lastName,
+            carPlates: carPlates,
+            profileImageUrl: widget.user.profileImageUrl,
+          ));
     }
   }
 

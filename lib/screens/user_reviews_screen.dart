@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import '../controllers/review_controller.dart';
 
 class UserReviewsScreen extends StatefulWidget {
   const UserReviewsScreen({super.key});
@@ -10,13 +9,12 @@ class UserReviewsScreen extends StatefulWidget {
 }
 
 class _UserReviewsScreenState extends State<UserReviewsScreen> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late final ReviewController _controller;
 
-  Stream<List<Map<String, dynamic>>> getReviewsStream() {
-    return _firestore
-        .collection('reviews')
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  @override
+  void initState() {
+    super.initState();
+    _controller = ReviewController();
   }
 
   void _navigateToProfile() {
@@ -36,11 +34,6 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
     });
   }
 
-  String formatDate(Timestamp timestamp) {
-    final DateTime date = timestamp.toDate();
-    return DateFormat.yMMMd().add_jm().format(date);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +51,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
         ],
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: getReviewsStream(),
+        stream: _controller.getReviewsStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -75,7 +68,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                 itemCount: reviews.length,
                 itemBuilder: (context, index) {
                   final review = reviews[index];
-                  final date = review['date'] as Timestamp?;
+                  final date = review['date'];
 
                   return Card(
                     margin: const EdgeInsets.symmetric(
@@ -94,7 +87,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                           ),
                           const SizedBox(height: 4.0),
                           Text(
-                            date != null ? formatDate(date) : '',
+                            date != null ? _controller.formatDate(date) : '',
                             style: const TextStyle(
                               fontSize: 12.0,
                               color: Colors.grey,

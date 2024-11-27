@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:smart_parking_app/screens/parkings_screen.dart';
+import '../controllers/profile_setup_controller.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   final String userId;
@@ -17,6 +17,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _carPlatesController = TextEditingController();
+  final ProfileSetupController _controller = ProfileSetupController();
   bool _isSaving = false;
 
   Future<void> _saveProfile() async {
@@ -27,17 +28,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     });
 
     try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.userId)
-          .set({
-        'firstName': _firstNameController.text.trim(),
-        'lastName': _lastNameController.text.trim(),
-        'carPlates': _carPlatesController.text.trim(),
-        'profileImageUrl': 'https://via.placeholder.com/150',
-      });
-
-      Navigator.pushReplacementNamed(context, '/home');
+      await _controller.saveProfile(
+        userId: widget.userId,
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+        carPlates: _carPlatesController.text,
+      );
     } catch (e) {
       if (kDebugMode) {
         print("Error saving profile: $e");
@@ -47,13 +43,21 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         _isSaving = false;
       });
     }
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const ParkingsScreen()),
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Setup Profile'),
+        title: const Text(
+          'Setup Profile',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
         backgroundColor: Colors.blue,
       ),
       body: Padding(

@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:smart_parking_app/screens/receipt_screen.dart';
+import '../controllers/parking_history_controller.dart';
 import '../models/receipt_model.dart';
+import 'receipt_screen.dart';
 
 class ParkingHistoryScreen extends StatefulWidget {
   const ParkingHistoryScreen({super.key});
@@ -12,28 +11,20 @@ class ParkingHistoryScreen extends StatefulWidget {
 }
 
 class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
+  final ParkingHistoryController _controller = ParkingHistoryController();
   String? currentUserCarPlate;
 
   @override
   void initState() {
     super.initState();
-    _getUserCarPlate();
+    _loadUserCarPlate();
   }
 
-  Future<void> _getUserCarPlate() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
-
-      if (userDoc.exists) {
-        setState(() {
-          currentUserCarPlate = userDoc['carPlates'];
-        });
-      }
-    }
+  Future<void> _loadUserCarPlate() async {
+    final carPlate = await _controller.getUserCarPlate();
+    setState(() {
+      currentUserCarPlate = carPlate;
+    });
   }
 
   void _navigateToProfile() {
@@ -52,7 +43,9 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     if (currentUserCarPlate == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     return Scaffold(
@@ -69,23 +62,17 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseFirestore.instance
-            .collection('receipts')
-            .where('userCarPlate', isEqualTo: currentUserCarPlate)
-            .snapshots(),
+      body: StreamBuilder<List<ReceiptModel>>(
+        stream: _controller.getReceiptsForCarPlate(currentUserCarPlate!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No receipts available.'));
           }
 
-          final receipts = snapshot.data!.docs.map((doc) {
-            return ReceiptModel.fromSnapshot(doc);
-          }).toList();
-
+          final receipts = snapshot.data!;
           return ListView.builder(
             itemCount: receipts.length,
             itemBuilder: (context, index) {

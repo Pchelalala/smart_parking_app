@@ -1,28 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import '../controllers/splash_controller.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   final Widget? child;
   const SplashScreen({super.key, this.child});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => widget.child!),
-          (route) => false);
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final SplashController controller = SplashController(context, child);
+
+    controller.startSplashTimer();
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),

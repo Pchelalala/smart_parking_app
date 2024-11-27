@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../features/gps_navigation/navigation_helper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../controllers/parkings_controller.dart';
 import '../models/parking_place_model.dart';
 
 class ParkingsScreen extends StatefulWidget {
@@ -12,32 +11,7 @@ class ParkingsScreen extends StatefulWidget {
 }
 
 class _ParkingsScreenState extends State<ParkingsScreen> {
-  void _navigateToProfile() {
-    Navigator.pushNamed(context, '/home');
-  }
-
-  void _navigateToParkingSpotsScreen(String address) {
-    Navigator.pushNamed(context, '/parkingSpots');
-  }
-
-  void _navigateToUserReviewsScreen() {
-    Navigator.pushNamed(context, '/userReview');
-  }
-
-  void _navigateToSpot(double latitude, double longitude) {
-    try {
-      NavigationHelper.openMap(latitude, longitude);
-    } catch (e) {
-      if (kDebugMode) {
-        print('Failed to open map: $e');
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to open map'),
-        ),
-      );
-    }
-  }
+  final ParkingsController _controller = ParkingsController();
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +25,7 @@ class _ParkingsScreenState extends State<ParkingsScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.person, color: Colors.white),
-            onPressed: _navigateToProfile,
+            onPressed: () => _controller.navigateToProfile(context),
           ),
         ],
       ),
@@ -86,7 +60,8 @@ class _ParkingsScreenState extends State<ParkingsScreen> {
                       GestureDetector(
                         onTap: () {
                           if (parking.address != null) {
-                            _navigateToParkingSpotsScreen(parking.address!);
+                            _controller.navigateToParkingSpotsScreen(
+                                context, parking.address!);
                           }
                         },
                         child: Row(
@@ -128,18 +103,11 @@ class _ParkingsScreenState extends State<ParkingsScreen> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
-                                if (parking.latitude != null &&
-                                    parking.longitude != null) {
-                                  _navigateToSpot(
-                                      parking.latitude!, parking.longitude!);
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Location data is not available'),
-                                    ),
-                                  );
-                                }
+                                _controller.navigateToSpot(
+                                  context,
+                                  parking.latitude,
+                                  parking.longitude,
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
@@ -153,7 +121,8 @@ class _ParkingsScreenState extends State<ParkingsScreen> {
                           const SizedBox(width: 8.0),
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: _navigateToUserReviewsScreen,
+                              onPressed: () => _controller
+                                  .navigateToUserReviewsScreen(context),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                               ),

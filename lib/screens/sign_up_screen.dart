@@ -16,7 +16,6 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final FirebaseAuthService _auth = FirebaseAuthService();
 
-  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -24,7 +23,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -45,11 +43,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(
                 height: 30,
-              ),
-              FormContainerWidget(
-                controller: _usernameController,
-                hintText: "Username",
-                isPasswordField: false,
               ),
               const SizedBox(
                 height: 10,
@@ -131,7 +124,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       isSigningUp = true;
     });
 
-    String username = _usernameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
 
@@ -142,7 +134,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
     if (user != null) {
       showToast(message: "User is successfully created");
-      Navigator.pushNamed(context, "/home");
+      Navigator.pushReplacementNamed(context, "/home");
     } else {
       showToast(message: "Some error happened");
     }

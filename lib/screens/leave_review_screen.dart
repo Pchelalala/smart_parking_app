@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../models/review_model.dart';
+import '../controllers/leave_review_controller.dart';
 
 class LeaveReviewScreen extends StatefulWidget {
   const LeaveReviewScreen({Key? key}) : super(key: key);
@@ -12,58 +9,18 @@ class LeaveReviewScreen extends StatefulWidget {
 }
 
 class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
-  final _reviewTextController = TextEditingController();
-  int _rating = 0;
-  bool _isSubmitting = false;
+  final ReviewController _controller = ReviewController();
 
-  void _navigateToProfile() {
-    Navigator.pushNamed(context, '/home');
+  @override
+  void initState() {
+    super.initState();
+    _controller.initialize(context);
   }
 
-  Future<String> fetchUsername() async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId != null) {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-      return snapshot.data()?['firstName'] ?? 'Anonymous';
-    }
-    return 'Anonymous';
-  }
-
-  Future<void> _submitReview() async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('You must be logged in to leave a review.')),
-      );
-      return;
-    }
-
-    setState(() {
-      _isSubmitting = true;
-    });
-
-    final firstName = await fetchUsername();
-    final review = ReviewModel(
-      userId: userId,
-      firstName: firstName,
-      reviewText: _reviewTextController.text,
-      stars: _rating,
-      date: DateTime.now(),
-    );
-
-    await FirebaseFirestore.instance.collection('reviews').add(review.toJson());
-
-    setState(() {
-      _isSubmitting = false;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Review submitted successfully!')),
-    );
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -78,7 +35,7 @@ class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.person, color: Colors.white),
-            onPressed: _navigateToProfile,
+            onPressed: () => _controller.navigateToProfile(),
           ),
         ],
       ),
@@ -88,7 +45,7 @@ class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              controller: _reviewTextController,
+              controller: _controller.reviewTextController,
               maxLines: 4,
               decoration: const InputDecoration(
                 labelText: 'Your Review',
@@ -101,12 +58,12 @@ class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
               children: List.generate(5, (index) {
                 return IconButton(
                   icon: Icon(
-                    index < _rating ? Icons.star : Icons.star_border,
+                    index < _controller.rating ? Icons.star : Icons.star_border,
                     color: Colors.amber,
                   ),
                   onPressed: () {
                     setState(() {
-                      _rating = index + 1;
+                      _controller.setRating(index + 1);
                     });
                   },
                 );
@@ -115,13 +72,18 @@ class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
             const SizedBox(height: 24),
             Center(
               child: ElevatedButton(
-                onPressed: _isSubmitting ? null : _submitReview,
+                onPressed: _controller.isSubmitting
+                    ? null
+                    : () async {
+                        await _controller.submitReview();
+                        setState(() {});
+                      },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                 ),
-                child: _isSubmitting
+                child: _controller.isSubmitting
                     ? const CircularProgressIndicator(color: Colors.white)
                     : const Text(
                         'Submit Review',
@@ -133,11 +95,5 @@ class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _reviewTextController.dispose();
-    super.dispose();
   }
 }
