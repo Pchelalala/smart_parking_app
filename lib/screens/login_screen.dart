@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../components/from_container_widget.dart';
 import '../components/toast.dart';
 import '../controllers/login_controller.dart';
+import 'forgot_password_screen.dart';
 import 'sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -67,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (user != null) {
       showToast(message: "User successfully signed in with Google");
-      Navigator.pushReplacementNamed(context, "/home");
+      Navigator.pushReplacementNamed(context, "/profile");
     } else {
       showToast(message: "An error occurred during Google sign-in");
     }
@@ -98,7 +99,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 hintText: "Password",
                 isPasswordField: true,
               ),
-              const SizedBox(height: 30),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ForgotPasswordScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "Forgot Password?",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
               GestureDetector(
                 onTap: _signIn,
                 child: Container(
