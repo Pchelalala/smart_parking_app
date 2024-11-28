@@ -28,26 +28,49 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     });
 
     try {
+      final isUnique =
+          await _controller.isCarPlateUnique(_carPlatesController.text);
+      if (!isUnique) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Car plates already registered.')),
+          );
+        }
+        setState(() {
+          _isSaving = false;
+        });
+        return;
+      }
+
       await _controller.saveProfile(
         userId: widget.userId,
         firstName: _firstNameController.text,
         lastName: _lastNameController.text,
         carPlates: _carPlatesController.text,
       );
+
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const ParkingsScreen()),
+          (Route<dynamic> route) => false,
+        );
+      }
     } catch (e) {
       if (kDebugMode) {
         print("Error saving profile: $e");
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('An error occurred while saving the profile.')),
+        );
       }
     } finally {
       setState(() {
         _isSaving = false;
       });
     }
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const ParkingsScreen()),
-      (Route<dynamic> route) => false,
-    );
   }
 
   @override
