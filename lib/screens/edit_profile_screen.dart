@@ -17,6 +17,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late String lastName;
   late String carPlates;
   late EditProfileController controller;
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -29,16 +30,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<void> _saveProfile() async {
-    if (_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
       await controller.saveProfile(firstName, lastName, carPlates);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
       Navigator.pop(
-          context,
-          UserModel(
-            firstName: firstName,
-            lastName: lastName,
-            carPlates: carPlates,
-            profileImageUrl: widget.user.profileImageUrl,
-          ));
+        context,
+        UserModel(
+          firstName: firstName,
+          lastName: lastName,
+          carPlates: carPlates,
+          profileImageUrl: widget.user.profileImageUrl,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      setState(() {
+        _isSaving = false;
+      });
     }
   }
 
@@ -57,21 +76,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 decoration: const InputDecoration(labelText: 'First Name'),
                 onChanged: (value) => firstName = value,
                 validator: (value) =>
-                value!.isEmpty ? 'Please enter a first name' : null,
+                    value!.isEmpty ? 'Please enter a first name' : null,
               ),
               TextFormField(
                 initialValue: lastName,
                 decoration: const InputDecoration(labelText: 'Last Name'),
                 onChanged: (value) => lastName = value,
                 validator: (value) =>
-                value!.isEmpty ? 'Please enter a last name' : null,
+                    value!.isEmpty ? 'Please enter a last name' : null,
               ),
               TextFormField(
                 initialValue: carPlates,
                 decoration: const InputDecoration(labelText: 'Car Plates'),
                 onChanged: (value) => carPlates = value,
                 validator: (value) =>
-                value!.isEmpty ? 'Please enter car plates' : null,
+                    value!.isEmpty ? 'Please enter car plates' : null,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
