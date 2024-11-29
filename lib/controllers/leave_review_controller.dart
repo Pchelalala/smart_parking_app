@@ -46,6 +46,15 @@ class ReviewController {
       return;
     }
 
+    if (rating == 0) {
+      ScaffoldMessenger.of(_context).showSnackBar(
+        const SnackBar(
+          content: Text('Please provide a star rating before submitting.'),
+        ),
+      );
+      return;
+    }
+
     isSubmitting = true;
 
     final firstName = await fetchUsername();
