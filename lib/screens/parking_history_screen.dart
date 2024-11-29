@@ -27,10 +27,6 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
     });
   }
 
-  void _navigateToProfile() {
-    Navigator.pushNamed(context, '/profile');
-  }
-
   void _navigateToReceiptDetails(ReceiptModel receipt) {
     Navigator.push(
       context,
@@ -55,12 +51,6 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.blue,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person, color: Colors.white),
-            onPressed: _navigateToProfile,
-          ),
-        ],
       ),
       body: StreamBuilder<List<ReceiptModel>>(
         stream: _controller.getReceiptsForCarPlate(currentUserCarPlate!),
@@ -85,7 +75,7 @@ class _ParkingHistoryScreenState extends State<ParkingHistoryScreen> {
                 child: ListTile(
                   title: Text(receipt.parkingSpotName),
                   subtitle: Text(
-                    'Paid: \$${receipt.amountPaid.toStringAsFixed(2)} | '
+                    'Paid: €${receipt.amountPaid.toStringAsFixed(2)} | '
                     'Plate: ${receipt.userCarPlate}',
                   ),
                   trailing: const Icon(Icons.arrow_forward),
