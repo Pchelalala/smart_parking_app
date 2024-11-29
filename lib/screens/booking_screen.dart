@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:smart_parking_app/controllers/booking_controller.dart';
 import 'package:smart_parking_app/screens/receipt_screen.dart';
@@ -191,7 +192,7 @@ class _BookingPageState extends State<BookingPage> {
                         ),
                         Row(
                           children: [
-                            const Icon(Icons.currency_pound,
+                            const Icon(FontAwesomeIcons.euroSign,
                                 size: 30, color: Colors.blue),
                             Text(
                               amountPay.toString(),

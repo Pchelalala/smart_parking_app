@@ -14,7 +14,7 @@ class StripeService {
   Future<bool> makePayment() async {
     try {
       // Create Payment Intent
-      String? paymentIntentClientSecret = await _createPaymentIntent(10, "usd");
+      String? paymentIntentClientSecret = await _createPaymentIntent(10, "eur");
       if (paymentIntentClientSecret == null) {
         if (kDebugMode) {
           print("Failed to create Payment Intent.");
@@ -28,6 +28,16 @@ class StripeService {
           paymentIntentClientSecret: paymentIntentClientSecret,
           merchantDisplayName: "Liudmyla Pcheliakova",
           style: ThemeMode.system,
+          billingDetails: const BillingDetails(
+            address: Address(
+              country: "LT",
+              city: 'Kaunas',
+              line1: '',
+              line2: '',
+              postalCode: '54685',
+              state: 'Lithuania',
+            ),
+          ),
         ),
       );
 
@@ -114,6 +124,6 @@ class StripeService {
 
   /// Converts the amount to cents (used by Stripe)
   String _calculateAmount(int amount) {
-    return (amount * 100).toString(); // Convert dollars to cents
+    return (amount * 100).toString(); // Convert euros to cents
   }
 }

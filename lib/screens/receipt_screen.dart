@@ -24,7 +24,7 @@ class ReceiptScreen extends StatelessWidget {
             Text("Car plate: ${receipt.userCarPlate}"),
             Text("Start time: ${receipt.startTime}"),
             Text("End time: ${receipt.endTime}"),
-            Text("Amount: ${receipt.amountPaid.toStringAsFixed(2)} ₽"),
+            Text("Amount: ${receipt.amountPaid.toStringAsFixed(2)} €"),
             const SizedBox(height: 20),
             Center(
               child: QrImageView(
