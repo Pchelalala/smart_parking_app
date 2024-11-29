@@ -72,6 +72,18 @@ class BookingController {
         'qrData': qrData,
       });
 
+      final slotsCollection =
+          FirebaseFirestore.instance.collection('parking_slots');
+      final querySnapshot =
+          await slotsCollection.where('slotName', isEqualTo: slotName).get();
+
+      if (querySnapshot.docs.isEmpty) {
+        throw Exception('Slot "$slotName" is not found.');
+      }
+
+      final slotId = querySnapshot.docs.first.id;
+      await slotsCollection.doc(slotId).update({'isBooked': true});
+
       onSuccess(receipt);
     } catch (e) {
       onError(e.toString());
