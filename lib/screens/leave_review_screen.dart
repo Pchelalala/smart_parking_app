@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../controllers/leave_review_controller.dart';
 
 class LeaveReviewScreen extends StatefulWidget {
-  const LeaveReviewScreen({Key? key}) : super(key: key);
+  const LeaveReviewScreen({super.key});
 
   @override
   State<LeaveReviewScreen> createState() => _LeaveReviewScreenState();
@@ -68,8 +68,8 @@ class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
               child: ElevatedButton(
                 onPressed: _controller.isSubmitting
                     ? null
-                    : () async {
-                        await _controller.submitReview();
+                    : () {
+                        _controller.submitReview();
                         setState(() {});
                       },
                 style: ElevatedButton.styleFrom(

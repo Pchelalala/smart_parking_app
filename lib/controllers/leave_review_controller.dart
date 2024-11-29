@@ -64,11 +64,6 @@ class ReviewController {
     ScaffoldMessenger.of(_context).showSnackBar(
       const SnackBar(content: Text('Review submitted successfully!')),
     );
-
-    Navigator.pushAndRemoveUntil(
-      _context,
-      MaterialPageRoute(builder: (context) => const UserReviewsScreen()),
-      (route) => false,
-    );
+    Navigator.pop(_context);
   }
 }
