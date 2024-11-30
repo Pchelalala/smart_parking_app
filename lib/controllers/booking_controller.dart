@@ -62,7 +62,8 @@ class BookingController {
 
       final qrData = receipt.qrData;
 
-      final bool paymentSuccess = await StripeService.instance.makePayment();
+      final bool paymentSuccess = await StripeService.instance
+          .makePayment(amount: (amountPaid * 100).toInt());
       if (!paymentSuccess) {
         throw Exception('Payment failed');
       }

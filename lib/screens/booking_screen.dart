@@ -14,14 +14,14 @@ class BookingPage extends StatefulWidget {
 
 class _BookingPageState extends State<BookingPage> {
   double parkingHours = 1;
-  double amountPay = 1.5;
+  double amountPay = 1.50;
   bool _isBooked = false;
 
   final BookingController _bookingController = BookingController();
 
   void amountCalculator() {
     setState(() {
-      amountPay = parkingHours * 1.5;
+      amountPay = parkingHours * 1.50;
     });
   }
 
@@ -195,7 +195,7 @@ class _BookingPageState extends State<BookingPage> {
                             const Icon(FontAwesomeIcons.euroSign,
                                 size: 30, color: Colors.blue),
                             Text(
-                              amountPay.toString(),
+                              amountPay.toStringAsFixed(2),
                               style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.w700,

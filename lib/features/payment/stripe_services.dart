@@ -11,10 +11,12 @@ class StripeService {
   static final StripeService instance = StripeService._();
 
   /// Initiates the payment process
-  Future<bool> makePayment() async {
+  Future<bool> makePayment(
+      {required int amount, String currency = "eur"}) async {
     try {
       // Create Payment Intent
-      String? paymentIntentClientSecret = await _createPaymentIntent(10, "eur");
+      String? paymentIntentClientSecret =
+          await _createPaymentIntent(amount, currency);
       if (paymentIntentClientSecret == null) {
         if (kDebugMode) {
           print("Failed to create Payment Intent.");
@@ -67,7 +69,7 @@ class StripeService {
     try {
       final dio = Dio();
       final data = {
-        "amount": _calculateAmount(amount),
+        "amount": amount,
         "currency": currency,
       };
 
@@ -120,10 +122,5 @@ class StripeService {
       }
       return false;
     }
-  }
-
-  /// Converts the amount to cents (used by Stripe)
-  String _calculateAmount(int amount) {
-    return (amount * 100).toString(); // Convert euros to cents
   }
 }
