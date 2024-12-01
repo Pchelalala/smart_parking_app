@@ -17,10 +17,6 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
     _controller = ReviewController();
   }
 
-  void _navigateToProfile() {
-    Navigator.pushNamed(context, '/profile');
-  }
-
   void _navigateToLeaveReviewScreen() {
     Navigator.pushNamed(context, '/leaveReview');
   }
@@ -43,12 +39,6 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.blue,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person, color: Colors.white),
-            onPressed: _navigateToProfile,
-          ),
-        ],
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: _controller.getReviewsStream(),
