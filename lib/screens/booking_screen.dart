@@ -33,6 +33,7 @@ class _BookingPageState extends State<BookingPage> {
     await _bookingController.bookSpot(
       slotName: widget.slotName,
       amountPaid: amountPay,
+      parkingHours: parkingHours,
       onError: (message) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $message')),

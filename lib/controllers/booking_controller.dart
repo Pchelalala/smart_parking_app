@@ -35,6 +35,7 @@ class BookingController {
   Future<void> bookSpot({
     required String slotName,
     required double amountPaid,
+    required double parkingHours,
     required Function(String message) onError,
     required Function(ReceiptModel receipt) onSuccess,
   }) async {
@@ -56,7 +57,7 @@ class BookingController {
         parkingSpotName: slotName,
         userCarPlate: carPlates,
         startTime: DateTime.now(),
-        endTime: DateTime.now().add(const Duration(hours: 2)),
+        endTime: DateTime.now().add(Duration(hours: parkingHours.toInt())),
         amountPaid: amountPaid,
       );
 
