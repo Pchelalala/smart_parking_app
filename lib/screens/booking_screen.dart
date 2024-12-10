@@ -4,18 +4,20 @@ import 'package:lottie/lottie.dart';
 import 'package:smart_parking_app/controllers/booking_controller.dart';
 import 'package:smart_parking_app/screens/receipt_screen.dart';
 
-class BookingPage extends StatefulWidget {
+class BookingScreen extends StatefulWidget {
   final String slotName;
-  const BookingPage({super.key, required this.slotName});
+  const BookingScreen({super.key, required this.slotName});
 
   @override
-  State<BookingPage> createState() => _BookingPageState();
+  State<BookingScreen> createState() => _BookingScreenState();
 }
 
-class _BookingPageState extends State<BookingPage> {
+class _BookingScreenState extends State<BookingScreen> {
   double parkingHours = 1;
   double amountPay = 1.50;
   bool _isBooked = false;
+  String selectedPaymentMethod = 'stripe'; // Default payment method
+  String? selectedCryptoCurrency; // For crypto payments
 
   final BookingController _bookingController = BookingController();
 
@@ -34,6 +36,8 @@ class _BookingPageState extends State<BookingPage> {
       slotName: widget.slotName,
       amountPaid: amountPay,
       parkingHours: parkingHours,
+      paymentMethod: selectedPaymentMethod,
+      cryptoCurrency: selectedCryptoCurrency,
       onError: (message) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $message')),
@@ -180,7 +184,65 @@ class _BookingPageState extends State<BookingPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 80),
+                const SizedBox(height: 30),
+                const Row(
+                  children: [
+                    Text("Select Payment Method"),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                DropdownButton<String>(
+                  value: selectedPaymentMethod,
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'stripe',
+                      child: Text('Card Payment'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'crypto',
+                      child: Text('Crypto Payment'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPaymentMethod = value!;
+                      if (selectedPaymentMethod == 'stripe') {
+                        selectedCryptoCurrency = null;
+                      }
+                    });
+                  },
+                ),
+                if (selectedPaymentMethod == 'crypto')
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 10),
+                      DropdownButton<String>(
+                        value: selectedCryptoCurrency,
+                        hint: const Text("Choose Crypto"),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'BTC',
+                            child: Text('Bitcoin (BTC)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'ETH',
+                            child: Text('Ethereum (ETH)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'USDT',
+                            child: Text('Tether (USDT)'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            selectedCryptoCurrency = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

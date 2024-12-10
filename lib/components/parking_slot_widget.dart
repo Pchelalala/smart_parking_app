@@ -68,7 +68,7 @@ class ParkingSlotWidget extends StatelessWidget {
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => BookingPage(
+                        builder: (_) => BookingScreen(
                           slotName: parkingSlot.slotName,
                         ),
                       ));
