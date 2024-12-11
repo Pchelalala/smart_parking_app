@@ -14,6 +14,20 @@ class BookingController {
     ),
   );
 
+  Future<List<String>> fetchAvailableCryptoCurrencies() async {
+    try {
+      final response = await _dio.get('/currencies');
+      if (response.statusCode == 200) {
+        final currencies = response.data['currencies'] as List<dynamic>;
+        return currencies.map((e) => e.toString()).toList();
+      } else {
+        throw Exception('Failed to fetch currencies: ${response.data}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch currencies: $e');
+    }
+  }
+
   Future<bool> checkActiveBooking(String carPlates) async {
     final now = DateTime.now();
 

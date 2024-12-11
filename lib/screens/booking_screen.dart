@@ -16,8 +16,9 @@ class _BookingScreenState extends State<BookingScreen> {
   double parkingHours = 1;
   double amountPay = 1.50;
   bool _isBooked = false;
-  String selectedPaymentMethod = 'stripe'; // Default payment method
-  String? selectedCryptoCurrency; // For crypto payments
+  String selectedPaymentMethod = 'stripe';
+  String? selectedCryptoCurrency;
+  List<String> availableCryptoCurrencies = [];
 
   final BookingController _bookingController = BookingController();
 
@@ -25,6 +26,20 @@ class _BookingScreenState extends State<BookingScreen> {
     setState(() {
       amountPay = parkingHours * 1.50;
     });
+  }
+
+  Future<void> _fetchAvailableCryptoCurrencies() async {
+    try {
+      final currencies =
+          await _bookingController.fetchAvailableCryptoCurrencies();
+      setState(() {
+        availableCryptoCurrencies = currencies;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load currencies: $e')),
+      );
+    }
   }
 
   Future<void> _bookSpot() async {
@@ -68,6 +83,7 @@ class _BookingScreenState extends State<BookingScreen> {
   void initState() {
     super.initState();
     amountCalculator();
+    _fetchAvailableCryptoCurrencies();
   }
 
   @override
@@ -220,20 +236,12 @@ class _BookingScreenState extends State<BookingScreen> {
                       DropdownButton<String>(
                         value: selectedCryptoCurrency,
                         hint: const Text("Choose Crypto"),
-                        items: const [
-                          DropdownMenuItem(
-                            value: 'BTC',
-                            child: Text('Bitcoin (BTC)'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'ETH',
-                            child: Text('Ethereum (ETH)'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'USDT',
-                            child: Text('Tether (USDT)'),
-                          ),
-                        ],
+                        items: availableCryptoCurrencies.map((currency) {
+                          return DropdownMenuItem(
+                            value: currency,
+                            child: Text(currency),
+                          );
+                        }).toList(),
                         onChanged: (value) {
                           setState(() {
                             selectedCryptoCurrency = value;
