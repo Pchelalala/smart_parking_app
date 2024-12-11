@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import '../features/user_auth/firebase_auth_services.dart';
+import '../features/user_auth/firebase_auth_service.dart';
 import '../components/toast.dart';
 
 class SignUpController {

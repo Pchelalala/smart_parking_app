@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dio/dio.dart';
 import '../models/receipt_model.dart';
-import '../features/payment/stripe_services.dart';
+import '../features/payment/stripe_service.dart';
 
 class BookingController {
   final Dio _dio = Dio(

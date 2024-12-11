@@ -8,7 +8,6 @@ class NavigationHelper {
     final appleMapsUrl =
         'https://maps.apple.com/?daddr=$latitude,$longitude&dirflg=d';
 
-    // Используем Uri.parse вместо приведения через as Uri
     final uri = Uri.parse(Platform.isIOS ? appleMapsUrl : googleMapsUrl);
 
     if (await canLaunchUrl(uri)) {

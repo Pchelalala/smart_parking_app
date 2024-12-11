@@ -26,7 +26,8 @@ class NowPaymentsService {
         return currencies;
       } else {
         throw Exception(
-            "Failed to fetch currencies. Status: ${response.statusCode}, Message: ${response.data}");
+            "Failed to fetch currencies. Status: ${response.statusCode}, "
+            "Message: ${response.data}");
       }
     } catch (e) {
       if (kDebugMode) {
@@ -65,7 +66,8 @@ class NowPaymentsService {
         }
       } else {
         throw Exception(
-            "Failed to create payment. Status: ${response.statusCode}, Message: ${response.data}");
+            "Failed to create payment. Status: ${response.statusCode}, "
+            "Message: ${response.data}");
       }
     } catch (e) {
       if (kDebugMode) {

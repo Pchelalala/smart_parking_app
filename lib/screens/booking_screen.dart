@@ -235,7 +235,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       const SizedBox(height: 10),
                       DropdownButton<String>(
                         value: selectedCryptoCurrency,
-                        hint: const Text("Choose Crypto"),
+                        hint: const Text("Choose Currency"),
                         items: availableCryptoCurrencies.map((currency) {
                           return DropdownMenuItem(
                             value: currency,
