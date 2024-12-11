@@ -56,11 +56,11 @@ class BookingController {
         "order_id": "test_order_${DateTime.now().millisecondsSinceEpoch}",
         "order_description": "Booking payment for parking spot",
         "ipn_callback_url":
-            "https://your-server.com/webhook", // Замените на ваш URL
+            "https://webhook.site/c1f3fb2a-4cbd-4912-871e-6203ed6104b3",
       });
 
       if (response.statusCode == 200) {
-        return response.data['invoice_url']; // Ссылка на оплату
+        return response.data['invoice_url'];
       } else {
         throw Exception('Error creating payment: ${response.data}');
       }
@@ -73,8 +73,8 @@ class BookingController {
     required String slotName,
     required double amountPaid,
     required double parkingHours,
-    required String paymentMethod, // "crypto" или "stripe"
-    required String? cryptoCurrency, // Только для криптовалюты
+    required String paymentMethod,
+    required String? cryptoCurrency,
     required Function(String message) onError,
     required Function(ReceiptModel receipt) onSuccess,
   }) async {
@@ -102,7 +102,6 @@ class BookingController {
 
       final qrData = receipt.qrData;
 
-      // Выбор способа оплаты
       bool paymentSuccess = false;
 
       if (paymentMethod == "stripe") {
@@ -111,13 +110,12 @@ class BookingController {
       } else if (paymentMethod == "crypto" && cryptoCurrency != null) {
         final paymentUrl = await makeCryptoPayment(
           amount: amountPaid,
-          currency: "EUR", // Базовая валюта
+          currency: "EUR",
           crypto: cryptoCurrency,
         );
         if (paymentUrl != null) {
-          // Вернуть ссылку для оплаты криптовалютой
           onError('Please complete the payment: $paymentUrl');
-          return; // Ждем подтверждения оплаты через IPN
+          return;
         }
       } else {
         throw Exception('Invalid payment method selected');
